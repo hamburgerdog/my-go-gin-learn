@@ -22,6 +22,7 @@ require (
 
 replace (
 	xjosiah.com/go-gin/conf => D:\go-gin/pkg/conf
+	xjosiah.com/go-gin/setting => D:\go-gin/setting
 	xjosiah.com/go-gin/middleware => D:\go-gin/middleware
 	xjosiah.com/go-gin/models => D:\go-gin/models
 	xjosiah.com/go-gin/pkg/e => D:\go-gin/pkg/e
