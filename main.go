@@ -11,6 +11,7 @@ import (
 func main() {
 	router := routers.InitRouter()
 
+	//	& 为了改变参数的值，ListenAndServer 需要用到&http.Server中的参数
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
 		Handler:        router,
@@ -18,6 +19,6 @@ func main() {
 		WriteTimeout:   setting.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
-
+	
 	s.ListenAndServe()
 }
