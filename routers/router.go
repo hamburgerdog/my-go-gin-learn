@@ -3,7 +3,9 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 
+	"xjosiah.com/go-gin/middleware/jwt"
 	"xjosiah.com/go-gin/pkg/setting"
+	"xjosiah.com/go-gin/routers/api"
 	v1 "xjosiah.com/go-gin/routers/api/v1"
 )
 
@@ -16,7 +18,10 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RunMode)
 
+	r.GET("/auth", api.GetAuth)
+
 	apiV1 := r.Group("/api/v1")
+	apiV1.Use(jwt.JWT())
 	{
 		apiV1.GET("/tags", v1.GetTags)
 

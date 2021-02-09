@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/EDDYCJY/go-gin-example v0.0.0-20201228125222-28f372bf41f9
 	github.com/astaxie/beego v1.12.3
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
@@ -27,6 +28,7 @@ require (
 replace (
 	xjosiah.com/go-gin/conf => D:\go-gin/pkg/conf
 	xjosiah.com/go-gin/middleware => D:\go-gin/middleware
+	xjosiah.com/go-gin/middleware/jwt => D:\go-gin/middleware/jwt
 	xjosiah.com/go-gin/models => D:\go-gin/models
 	xjosiah.com/go-gin/pkg/e => D:\go-gin/pkg/e
 	xjosiah.com/go-gin/pkg/setting => D:\go-gin/pkg/setting
