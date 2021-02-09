@@ -12,6 +12,13 @@ import (
 	"xjosiah.com/go-gin/pkg/util"
 )
 
+//	@Summary	获取文章标签
+//	@Produce	json
+//	@Param	name query	string	false	"Name"
+//	@Param	state	query	int	false	"State"
+//	@Failure	500	{object} gin.H	string
+//	@Success	200	{object} gin.H	string
+//	@Router		/api/v1/tags	[get]
 func GetTags(c *gin.Context) {
 	name := c.Query("name")
 
@@ -40,6 +47,14 @@ func GetTags(c *gin.Context) {
 	})
 }
 
+//	@Summary	新增文章标签
+//	@Produce	json
+//	@Param		name 	query	string	true	"Name"
+//	@Param		state	query	int		flase	"Stase"
+//	@Param		created_by	query	int	flase	"CreatedBy"
+//	@Failure	500	{object} gin.H	string
+//	@Success	200	{object} gin.H	string
+//	@Router		/api/v1/tags	[post]
 func AddTag(c *gin.Context) {
 	name := c.Query("name")
 	state := com.StrTo(c.Copy().DefaultQuery("state", "0")).MustInt()
@@ -69,6 +84,15 @@ func AddTag(c *gin.Context) {
 	})
 }
 
+//	@Summary	修改文章标签
+//	@Produce	json
+//	@Param		id		path	int		true	"ID"
+//	@Param		name	query	string	true	"Name"
+//	@Param		state	query	int		false	"State"
+//	@Param		modified_by	query	string	true	"ModifiedBy"
+//	@Failure	500	{object} gin.H	string
+//	@Success	200	{object} gin.H	string
+//	@Router		/api/v1/tags/{id}	[put]
 func EditTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 	name := c.Query("name")
@@ -114,6 +138,12 @@ func EditTag(c *gin.Context) {
 
 }
 
+//	@Summary	删除文章标签
+//	@Produce	json
+//	@Param		id	path	int	true	"ID"
+//	@Failure	500	{object} gin.H	string
+//	@Success	200	{object} gin.H	string
+//	@Router		/api/v1/tags/{id}	[delete]
 func DeleteTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 
