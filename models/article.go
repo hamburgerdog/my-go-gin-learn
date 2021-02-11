@@ -34,7 +34,7 @@ func (article *Article) BeforeUpdate(scope *gorm.Scope) error {
 func ExistArticleByID(id int) bool {
 	var article Article
 
-	db.Select("id").Where("id=?", id).First(&article)
+	db.Select("id").Where("id=? AND deleted_on = ?", id, 0).First(&article)
 
 	if article.ID > 0 {
 		return true
@@ -67,7 +67,7 @@ func GetArticle(id int) (article Article) {
 }
 
 func EditArticle(id int, data interface{}) bool {
-	db.Model(&Article{}).Where("id = ? ", id).Update(data)
+	db.Model(&Article{}).Where("id=? AND deleted_on = ?", id, 0).Update(data)
 
 	return true
 }
@@ -87,7 +87,9 @@ func AddArticle(data map[string]interface{}) bool {
 }
 
 func DeleteArticle(id int) bool {
-	db.Where("id = ? ", id).Delete(Article{})
+	if err := db.Where("id = ? ", id).Delete(Article{}); err != nil {
+		return false
+	}
 
 	return true
 }

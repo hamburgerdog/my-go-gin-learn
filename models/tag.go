@@ -52,13 +52,13 @@ func DeleteTag(id int) bool {
 }
 
 func EditTag(id int, data interface{}) bool {
-	db.Model(&Tag{}).Where("id=?", id).Updates(data)
+	db.Model(&Tag{}).Where("id = ? AND deleted_on = ?", id, 0).Updates(data)
 	return true
 }
 
 func ExistTagByName(name string) bool {
 	var tag Tag
-	db.Select("id").Where("name = ?", name).First(&tag)
+	db.Select("id").Where("name = ? AND deleted_on = ?", name, 0).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -67,7 +67,7 @@ func ExistTagByName(name string) bool {
 
 func ExistTagById(id int) bool {
 	var tag Tag
-	db.Select("id").Where("id = ?", id).First(&tag)
+	db.Select("id").Where("id = ? AND deleted_on = ?", id, 0).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
