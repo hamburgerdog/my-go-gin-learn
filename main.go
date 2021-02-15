@@ -9,19 +9,25 @@ import (
 	"os/signal"
 	"time"
 
+	"xjosiah.com/go-gin/models"
+	"xjosiah.com/go-gin/pkg/logging"
 	"xjosiah.com/go-gin/pkg/setting"
 	"xjosiah.com/go-gin/routers"
 )
 
 func main() {
+	setting.Setup()
+	models.Setup()
+	logging.Setup()
+
 	router := routers.InitRouter()
 
 	//	& 为了改变参数的值，ListenAndServer 需要用到&http.Server中的参数
 	s := &http.Server{
-		Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
+		Addr:           fmt.Sprintf(":%d", setting.ServerSetting.HttpPort),
 		Handler:        router,
-		ReadTimeout:    setting.ReadTimeout,
-		WriteTimeout:   setting.WriteTimeout,
+		ReadTimeout:    setting.ServerSetting.ReadTimeout,
+		WriteTimeout:   setting.ServerSetting.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
 

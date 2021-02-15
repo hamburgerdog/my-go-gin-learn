@@ -9,14 +9,15 @@ import (
 type Article struct {
 	Model
 
-	TagID      int    `json:"tag_id" gorm:"index"` //	外键
-	Tag        Tag    `json:"tag"`                 //	Related进行关联
-	Title      string `json:"title"`
-	Desc       string `json:"desc"`
-	Content    string `json:"content"`
-	CreatedBy  string `json:"created_by"`
-	ModifiedBy string `json:"modified_by"`
-	State      int    `json:"state"`
+	TagID         int    `json:"tag_id" gorm:"index"` //	外键
+	Tag           Tag    `json:"tag"`                 //	Related进行关联
+	Title         string `json:"title"`
+	Desc          string `json:"desc"`
+	CoverImageUrl string `json:"cover_image_url"`
+	Content       string `json:"content"`
+	CreatedBy     string `json:"created_by"`
+	ModifiedBy    string `json:"modified_by"`
+	State         int    `json:"state"`
 }
 
 func (article *Article) BeforeCreate(scope *gorm.Scope) error {
@@ -75,12 +76,13 @@ func EditArticle(id int, data interface{}) bool {
 func AddArticle(data map[string]interface{}) bool {
 	db.Create(&Article{
 		//	v表示一个接口值，I表示接口类型。这个实际就是 Golang 中的类型断言，用于判断一个接口值的实际类型是否为某个类型，或一个非接口值的类型是否实现了某个接口类型
-		TagID:     data["tag_id"].(int),
-		Title:     data["title"].(string),
-		Desc:      data["desc"].(string),
-		Content:   data["content"].(string),
-		CreatedBy: data["created_by"].(string),
-		State:     data["state"].(int),
+		TagID:         data["tag_id"].(int),
+		Title:         data["title"].(string),
+		Desc:          data["desc"].(string),
+		Content:       data["content"].(string),
+		CreatedBy:     data["created_by"].(string),
+		State:         data["state"].(int),
+		CoverImageUrl: data["cover_image_url"].(string),
 	})
 
 	return true

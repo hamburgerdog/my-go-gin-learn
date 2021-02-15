@@ -1,11 +1,14 @@
 package routers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"xjosiah.com/go-gin/pkg/setting"
+	"xjosiah.com/go-gin/pkg/upload"
 	"xjosiah.com/go-gin/routers/api"
 	v1 "xjosiah.com/go-gin/routers/api/v1"
 
@@ -19,10 +22,13 @@ func InitRouter() *gin.Engine {
 
 	r.Use(gin.Recovery())
 
-	gin.SetMode(setting.RunMode)
+	gin.SetMode(setting.ServerSetting.RunMode)
+
+	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/auth", api.GetAuth)
+	r.POST("/upload", api.UploadImage)
 
 	apiV1 := r.Group("/api/v1")
 	//	apiV1.Use(jwt.JWT())

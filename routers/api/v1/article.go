@@ -83,7 +83,7 @@ func GetArticles(c *gin.Context) {
 	if !valid.HasErrors() {
 		code = e.SUCCESS
 
-		data["list"] = models.GetArticles(util.GetPage(c), setting.PageSize, maps)
+		data["list"] = models.GetArticles(util.GetPage(c), setting.AppSetting.PageSize, maps)
 		data["total"] = models.GetARticleTotal(maps)
 
 	} else {
@@ -109,6 +109,7 @@ func GetArticles(c *gin.Context) {
 // @Param content body string true "Content"
 // @Param created_by body string true "CreatedBy"
 // @Param state body int true "State"
+// @Param cover_image_url body string flase "CoverImageUrl"
 // @Success 200 {object} gin.H	string
 // @Failure 500 {object} gin.H	string
 // @Router /api/v1/articles [post]
@@ -118,6 +119,7 @@ func AddArticle(c *gin.Context) {
 	desc := c.Query("desc")
 	content := c.Query("content")
 	createdBy := c.Query("created_by")
+	coverImageUrl := c.Query("cover_image_url")
 	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
 
 	valid := validation.Validation{}
@@ -127,6 +129,7 @@ func AddArticle(c *gin.Context) {
 	valid.Required(content, "content").Message("内容不能为空")
 	valid.Required(createdBy, "created_by").Message("创建人不能为空")
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
+	valid.MaxSize(coverImageUrl, 100, "最长不能超过100个字符")
 
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
@@ -138,6 +141,7 @@ func AddArticle(c *gin.Context) {
 			data["content"] = content
 			data["created_by"] = createdBy
 			data["state"] = state
+			data["cover_image_url"] = coverImageUrl
 
 			models.AddArticle(data)
 			code = e.SUCCESS
@@ -165,6 +169,7 @@ func AddArticle(c *gin.Context) {
 // @Param desc body string false "Desc"
 // @Param content body string false "Content"
 // @Param modified_by body string true "ModifiedBy"
+// @Param cover_image_url body string flase "CoverImageUrl"
 // @Param state body int false "State"
 // @Success 200 {object} gin.H	string
 // @Failure 500 {object} gin.H	string
@@ -178,6 +183,7 @@ func EditArticle(c *gin.Context) {
 	desc := c.Query("desc")
 	content := c.Query("content")
 	modifiedBy := c.Query("modified_by")
+	coverImageUrl := c.Query("cover_image_url")
 
 	var state int = -1
 	if arg := c.Query("state"); arg != "" {
@@ -191,6 +197,7 @@ func EditArticle(c *gin.Context) {
 	valid.MaxSize(content, 65535, "content").Message("内容最长为65535字符")
 	valid.Required(modifiedBy, "modified_by").Message("修改人不能为空")
 	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
+	valid.MaxSize(coverImageUrl, 100, "最长不能超过100个字符")
 
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
@@ -208,6 +215,9 @@ func EditArticle(c *gin.Context) {
 				}
 				if content != "" {
 					data["content"] = content
+				}
+				if coverImageUrl != "" {
+					data["cover_image_url"] = coverImageUrl
 				}
 
 				data["modified_by"] = modifiedBy

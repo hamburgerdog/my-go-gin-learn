@@ -47,8 +47,10 @@ replace (
 	xjosiah.com/go-gin/pkg/e => D:\go-gin/pkg/e
 	xjosiah.com/go-gin/pkg/logging => D:\go-gin/pkg/logging
 	xjosiah.com/go-gin/pkg/setting => D:\go-gin/pkg/setting
+	xjosiah.com/go-gin/pkg/upload => D:\go-gin/pkg/upload
 	xjosiah.com/go-gin/pkg/util => D:\go-gin/pkg/util
 	xjosiah.com/go-gin/routers => D:\go-gin/routers
 	xjosiah.com/go-gin/routers/api.v1 => D:\go-gin/routers/api/v1
 	xjosiah.com/go-gin/setting => D:\go-gin/setting
+	xjosiah.com/go-gin/file =>  D:\go-gin/file
 )
