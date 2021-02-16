@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"xjosiah.com/go-gin/models"
+	"xjosiah.com/go-gin/pkg/gredis"
 	"xjosiah.com/go-gin/pkg/logging"
 	"xjosiah.com/go-gin/pkg/setting"
 	"xjosiah.com/go-gin/routers"
@@ -18,6 +19,7 @@ import (
 func main() {
 	setting.Setup()
 	models.Setup()
+	gredis.Setup()
 	logging.Setup()
 
 	router := routers.InitRouter()

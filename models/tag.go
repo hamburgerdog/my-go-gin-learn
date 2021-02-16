@@ -1,11 +1,5 @@
 package models
 
-import (
-	"time"
-
-	"github.com/jinzhu/gorm"
-)
-
 //	use orm to get data
 type Tag struct {
 	Model
@@ -16,6 +10,7 @@ type Tag struct {
 	State      int    `json:"state"`
 }
 
+/*
 func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
 	scope.SetColumn("CreatedOn", time.Now().Unix())
 	return nil
@@ -25,51 +20,68 @@ func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
 	scope.SetColumn("ModifiedOn", time.Now().Unix())
 	return nil
 }
+*/
 
-func GetTags(pageNum int, pageSize int, maps interface{}) (tags []Tag) {
+func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 	//	db from models/models.go [var db *gorm.DB]
-	db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
-	return
+	var tags []Tag
+	if err := db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags).Error; err != nil {
+		return nil, err
+	}
+	return tags, nil
 }
 
-func GetTagTotal(maps interface{}) (count int) {
-	db.Model(&Tag{}).Where(maps).Count(&count)
-	return
+func GetTagTotal(maps interface{}) (int, error) {
+	var count int
+	if err := db.Model(&Tag{}).Where(maps).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
-func AddTag(name string, state int, createdBy string) bool {
-	db.Create(&Tag{
+func AddTag(name string, state int, createdBy string) error {
+	if err := db.Create(&Tag{
 		Name:      name,
 		State:     state,
 		CreatedBy: createdBy,
-	})
-	return true
-}
-
-func DeleteTag(id int) bool {
-	db.Where("id=?", id).Delete(&Tag{})
-	return true
-}
-
-func EditTag(id int, data interface{}) bool {
-	db.Model(&Tag{}).Where("id = ? AND deleted_on = ?", id, 0).Updates(data)
-	return true
-}
-
-func ExistTagByName(name string) bool {
-	var tag Tag
-	db.Select("id").Where("name = ? AND deleted_on = ?", name, 0).First(&tag)
-	if tag.ID > 0 {
-		return true
+	}).Error; err != nil {
+		return err
 	}
-	return false
+	return nil
 }
 
-func ExistTagById(id int) bool {
-	var tag Tag
-	db.Select("id").Where("id = ? AND deleted_on = ?", id, 0).First(&tag)
-	if tag.ID > 0 {
-		return true
+func DeleteTag(id int) error {
+	if err := db.Where("id=?", id).Delete(&Tag{}).Error; err != nil {
+		return err
 	}
-	return false
+	return nil
+}
+
+func EditTag(id int, data interface{}) error {
+	if err := db.Model(&Tag{}).Where("id = ? AND deleted_on = ?", id, 0).Updates(data).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func ExistTagByName(name string) (bool, error) {
+	var tag Tag
+	if err := db.Select("id").Where("name = ? AND deleted_on = ?", name, 0).First(&tag).Error; err != nil {
+		return false, err
+	}
+	if tag.ID > 0 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func ExistTagById(id int) (bool, error) {
+	var tag Tag
+	if err := db.Select("id").Where("id = ? AND deleted_on = ?", id, 0).First(&tag).Error; err != nil {
+		return false, err
+	}
+	if tag.ID > 0 {
+		return true, nil
+	}
+	return false, nil
 }
